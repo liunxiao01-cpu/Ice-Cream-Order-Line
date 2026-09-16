@@ -165,7 +165,7 @@ void printOrders(Order orders[], int size) {
 
 
 void displayMenu() {
-    cout << "\n=== FULLY INTEGRATED MASTER MENU ==="
+    cout << "\nFULLY INTEGRATED MASTER MENU"
          << "\n1. Take New Order "
          << "\n2. Serve Next Customer "
          << "\n3. Display Order Queue"
