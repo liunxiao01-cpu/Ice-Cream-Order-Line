@@ -126,13 +126,13 @@ public:
 };
 class Node {
 public:
-    IceCream* iceCreamData;
-    double price; 
+    IceCream* archivedData;
+    double finalprice; 
     Node* next;
 
     Node(IceCream* orderObj, double pr) {
-        iceCreamData = orderObj;
-        price = pr;
+        archivedData = orderObj;
+        finalprice = pr;
         next = nullptr;
     }
 };
@@ -143,13 +143,6 @@ private:
 
 public:
     LinkedList() { head = nullptr; }
-
-    bool isEmpty() { return head == nullptr; }
-    
-    IceCream* getFrontOrder() {
-        if (head == nullptr) return nullptr;
-        return head->iceCreamData;
-    }
 
     void insertHistory(IceCream* orderObj, double pr) {
         Node* NewNode = new Node(orderObj, pr);
@@ -307,7 +300,7 @@ int main() {
                 break;
 
             case 2:
-                handleDequeue(activeQueue);
+                handleDequeue(activeQueue, saleHistory);
                 break;
 
             case 3:
@@ -354,7 +347,8 @@ int main() {
     } while (choice != 7);
 
     while (!activeQueue.isEmpty()) {
-        activeQueue.deleteFront();
+       delete activeQueue.getFrontOrder();
+       activeQueue.dequeue();
     }
 
     return 0;
