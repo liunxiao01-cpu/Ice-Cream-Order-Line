@@ -273,7 +273,7 @@ int main() {
                 break;
 
             case 6:
-                cout << "\nShutting down system. Have a nice day!\n";
+                cout << "\nShutting down system.\n";
                 break;
         }
     } while (choice != 6);
