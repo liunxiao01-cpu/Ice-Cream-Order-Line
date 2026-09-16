@@ -205,6 +205,10 @@ int main() {
     activeQueue.insertOrder(new IceCream(103, "Coconut", 2), 3.00);
     activeQueue.insertOrder(new IceCream(104, "Chocolate", 1), 3.25);
     activeQueue.insertOrder(new IceCream(101, "Coffee", 1), 2.00);
+    activeQueue.insertOrder(new IceCream(106, "Strawberry", 3), 8.25);
+    activeQueue.insertOrder(new IceCream(102, "Mocha", 2), 9.00);
+    activeQueue.insertOrder(new IceCream(105, "Vanilla", 1), 1.50);
+    activeQueue.insertOrder(new IceCream(107, "Matcha", 4), 10.00);
 
     do {
         displayMenu();
