@@ -39,7 +39,91 @@ public:
         cout <<  "Destructor called! Memory freed." << endl;
     }
 };
+class QueueNode {
+public:
+    IceCream* iceCreamData; 
+    double price; 
+    QueueNode* next;
 
+    QueueNode(IceCream* orderObj, double pr) {
+        iceCreamData = orderObj;
+        price = pr;
+        next = nullptr;
+    }
+};
+
+class IceCreamQueue {
+private:
+    QueueNode* front; 
+    QueueNode* rear;  
+
+public:
+    IceCreamQueue() {
+        front = nullptr;
+        rear = nullptr;
+    }
+    bool isEmpty() { 
+        return front == nullptr; 
+    }
+    IceCream* getFrontOrder() {
+        if (front == nullptr) return nullptr;
+        return front->iceCreamData;
+    }
+    double getFrontPrice() {
+        if (front == nullptr) return 0.0;
+        return front->price;
+    }
+    void enqueue(IceCream* orderObj, double pr) {
+        QueueNode* newNode = new QueueNode(orderObj, pr);
+
+        if (isEmpty()) {
+            front = newNode;
+            rear = newNode; 
+        } else {
+            rear->next = newNode; 
+            rear = newNode;       
+        }
+    }
+    void dequeue() {
+        if (isEmpty()) return;
+        
+        QueueNode* temp = front;
+        front = front->next; 
+        
+        if (front == nullptr) {
+            rear = nullptr; 
+        }
+
+        delete temp->iceCreamData; 
+        delete temp;               
+    }
+     void displayQueue() {
+        if (isEmpty()) {
+            cout << "\nNotice: The ice cream queue line is empty!\n";
+            return;
+        }
+        QueueNode* current = front;
+        cout << "\nCURRENT LIVE QUEUE LINE \n";
+        while (current != nullptr) {
+            current->iceCreamData->display();
+            cout << "  Total Price: $" << current->price << "\n";
+            cout << "--------------------------------------------\n";
+            current = current->next;
+        }
+        int convertToArray(Order orders[]) {
+        int count = 0;
+        QueueNode* current = front;
+        while (current != nullptr) {
+            orders[count].orderID = current->iceCreamData->getOrderID();
+            orders[count].item = current->iceCreamData->getFlavor();
+            orders[count].quantity = current->iceCreamData->getQuantity();
+            orders[count].total_price = current->price;
+            count++;
+            current = current->next;
+        }
+        return count; 
+    }
+};
 class Node {
 public:
     IceCream* iceCreamData;
@@ -67,7 +151,7 @@ public:
         return head->iceCreamData;
     }
 
-    void insertOrder(IceCream* orderObj, double pr) {
+    void insertHistory(IceCream* orderObj, double pr) {
         Node* NewNode = new Node(orderObj, pr);
 
         if (head == nullptr) {
@@ -80,45 +164,30 @@ public:
             temp->next = NewNode;
         }
     }
-
-    void deleteFront() {
-        if (head == nullptr) return;
-        
-        Node* temp = head;
-        head = head->next;
-        
-        delete temp->iceCreamData; 
-        delete temp;
-    }
-
-    void displayOrder() {
+    void displayHistory() {
         if (head == nullptr) {
-            cout << "\nNotice: The line is completely empty!\n";
+            cout << "\nNotice: Sales history archive log is currently empty.\n";
             return;
         }
-        Node* current = head;
-        cout << "\n--- CURRENT WAITING LINE ---\n";
+        ListNode* current = head;
+        cout << "\nCOMPLETED SALES LOG \n";
         while (current != nullptr) {
-            current->iceCreamData->display(); 
-            cout << "  Total Price: $" << current->price << "\n";
-            cout << "----------------------------\n";
+            current->archivedData->display();
+            cout << "  Revenue Tracked: $" << current->finalPrice << "\n";
+            cout << "------------------------------------------------\n";
             current = current->next;
         }
     }
-
-    int convertToArray(Order orders[]) {
-        int count = 0;
-        Node* current = head;
+     ~LinkedList() {
+        ListNode* current = head;
         while (current != nullptr) {
-            orders[count].orderID = current->iceCreamData->getOrderID();
-            orders[count].item = current->iceCreamData->getFlavor();
-            orders[count].quantity = current->iceCreamData->getQuantity();
-            orders[count].total_price = current->price;
-            count++;
-            current = current->next;
+            ListNode* nextNode = current->next;
+            delete current->archivedData;  
+            delete current;             
+            current = nextNode;
         }
-        return count; 
     }
+    
 };
 
 
@@ -169,9 +238,10 @@ void displayMenu() {
          << "\n1. Take New Order "
          << "\n2. Serve Next Customer "
          << "\n3. Display Order Queue"
-         << "\n4. Search Order by Flavor"
-         << "\n5. Sort & View Total Orders"
-         << "\n6. Exit"
+         << "\n4. View Processed Sales Log"
+         << "\n5. Search Order by Flavor"
+         << "\n6. Sort & View Total Orders"
+         << "\n7. Exit"
          << "\nChoice: ";
 }
 
@@ -189,12 +259,14 @@ void handleDequeue(LinkedList& list) {
     IceCream* frontOrder = list.getFrontOrder();
     cout << "\n--- Serving Order Now ---\n";
     frontOrder->display();
-    
-    list.deleteFront(); 
+    history.insertHistory(frontOrder, frontPrice);
+    q.dequeue(); 
+    cout << "-> Success: Customer served. Record shifted to history log.\n";
 }
 
 int main() {
-    LinkedList activeQueue;
+    IceCreamQueue activeQueue;
+    LinkedListed saleHistory;
     int choice = 0;
 
     int id, qty;
@@ -241,8 +313,11 @@ int main() {
             case 3:
                 activeQueue.displayOrder();
                 break;
-
             case 4:
+                salesHistory.displayHistory();
+                break;
+
+            case 5:
                 activeSize = activeQueue.convertToArray(tempArray);
                 if (activeSize == 0) {
                     cout << "\nNotice: Order line is empty.\n";
@@ -262,7 +337,7 @@ int main() {
                 }
                 break;
 
-            case 5:
+            case 6:
                 activeSize = activeQueue.convertToArray(tempArray);
                 if (activeSize == 0) {
                     cout << "\nNotice: No orders to sort.\n";
@@ -272,11 +347,11 @@ int main() {
                 }
                 break;
 
-            case 6:
+            case 7:
                 cout << "\nShutting down system.\n";
                 break;
         }
-    } while (choice != 6);
+    } while (choice != 7);
 
     while (!activeQueue.isEmpty()) {
         activeQueue.deleteFront();
