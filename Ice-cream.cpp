@@ -22,7 +22,7 @@ public:
         orderID = id;
         flavor = f;
         quantity = q;
-        cout << "[System] Constructor: Ice Cream object initialized.\n";
+        cout << "Constructor called!\n";
     }
 
     int getOrderID() { return orderID; }
@@ -36,7 +36,7 @@ public:
     }
 
     ~IceCream() {
-        cout << "[System] Destructor: Memory freed.\n";
+        cout << "Destructor called! Memory freed.\n";
     }
 };
 
@@ -107,7 +107,7 @@ public:
             return;
         }
         QueueNode* current = front;
-        cout << "\n--- CURRENT LIVE QUEUE LINE (O(1) Tracked) ---\n";
+        cout << "\nCURRENT LIVE QUEUE LINE\n";
         while (current != nullptr) {
             current->iceCreamData->display();
             cout << "  Total Price: $" << current->price << "\n";
@@ -170,7 +170,7 @@ public:
             return;
         }
         ListNode* current = head;
-        cout << "\n--- COMPLETED SALES LOG (Linked List Archive) ---\n";
+        cout << "\n COMPLETED SALES LOG \n";
         while (current != nullptr) {
             current->archivedData->display();
             cout << "  Revenue Tracked: $" << current->finalPrice << "\n";
