@@ -18,7 +18,7 @@ disturbing the live queue.
 ## How to Compile & Run
 
 ```bash
-g++ -std=c++17 -Wall -o icecream ice_cream_fixed.cpp
+g++ -std=c++17 -Wall -o icecream ice_cream_order_line.cpp
 ./icecream
 ```
 
